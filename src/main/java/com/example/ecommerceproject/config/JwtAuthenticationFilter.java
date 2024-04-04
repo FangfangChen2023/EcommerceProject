@@ -18,7 +18,7 @@ import java.io.IOException;
 
 @Component
 @RequiredArgsConstructor
-public class JwtAuthenticationFilter extends OncePerRequestFilter {
+public class JwtAuthenticationFilter extends OncePerRequestFilter { // invoke only once every request
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
 
@@ -26,8 +26,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(
             HttpServletRequest request,
             HttpServletResponse response,
-            FilterChain filterChain) throws ServletException, IOException {
+            FilterChain filterChain                                             /* For invoking the rest filter*/
+    ) throws ServletException, IOException {
+        /*   https://jwt.io/introduction
+            JWT: header.payload.signature
+                    Header includes: the type of the token, the signing algorithm
+                    Payload includes: Claims (some data about the entity, usually the user) -- registered claim, public claim, private claim
+                    signature includes: signed (encoded header+ encoded payload + a secret) with the signing algorithm in the header
+        */
 
+        // Authorization: Bearer <token>
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
         final String username;
@@ -35,7 +43,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request,response);
             return;
         }
-        jwt=authHeader.substring(7);
+        jwt=authHeader.substring(7);    // extracting the jwt
         username=jwtService.extractUsername(jwt);
         if(username!=null && SecurityContextHolder.getContext().getAuthentication()==null){
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
