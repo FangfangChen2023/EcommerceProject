@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+// User register information
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

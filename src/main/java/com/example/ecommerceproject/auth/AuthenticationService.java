@@ -25,18 +25,20 @@ public class AuthenticationService {
                 .role(Role.CUSTOMER)
                 .password(passwordEncoder.encode(request.getPassword())) // Encode the password before putting it into database
                 .build();
-        userRepository.save(user);
+        userRepository.save(user);  // Save the new user to the database
         var jwtToken = jwtService.generateToken(user);
-        return AuthenticationResponse.builder().token(jwtToken).build();
+        return AuthenticationResponse.builder().token(jwtToken).build();    // Send the new token
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request){
+        // AuthenticationManager itself contains methods for authentication
+        // If the authentication fails, throw an exception
         authManager.authenticate(new UsernamePasswordAuthenticationToken(
                 request.getUsername(),
                 request.getPassword()
         ));
+        // If  the authentication succeed, return a new token
         User user = userRepository.findByUsername(request.getUsername()).orElseThrow();
-
         var jwtToken = jwtService.generateToken(user);
         return AuthenticationResponse.builder().token(jwtToken).build();
     }

@@ -26,18 +26,24 @@ public class SecurityConfiguration {        // Configuration for Spring security
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/api/auth/**")    // Allow to visit these endpoints for authentication
+                        .requestMatchers("/api/auth/**")    // Allow to visit these endpoints for authentication(login in, register page)
                         .permitAll()
                         .requestMatchers("/api/admin").hasAnyAuthority(Role.ADMIN.name())
                         .requestMatchers("/api/customer").hasAnyAuthority(Role.CUSTOMER.name())
-                        .anyRequest()
+                        .anyRequest() // Authenticate the rest endpoints
                         .authenticated()
                 )
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
-
+                // Add the jwt filter before the UsernamePasswordAuthenticationFilter
                 return http.build();
+        /***
+         * SessionCreationPolicy.STATELESS -   No session will be created or used
+         * SessionCreationPolicy.ALWAYS - A session will always be created if it does not exist.
+         * SessionCreationPolicy.NEVER - A session will never be created. But if a session exists, it will be used.
+         * SessionCreationPolicy.IF_REQUIRED - A session will be created if required. (Default Configuration)
+         */
 
     }
 }

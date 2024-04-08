@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+// The information that needs to be authenticated
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

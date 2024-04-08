@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+// Only a new token will be returned
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
